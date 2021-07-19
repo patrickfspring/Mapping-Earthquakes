@@ -13,26 +13,26 @@ function createFeatures(earthquakeData) {
     
     // Set the color based on depth of the earthquake.
     style: function(feature) {
-      if (feature.geometry.coordinates[2] > 50) {
-        return{color: "purple"};
+      if (feature.geometry.coordinates[2] > 100) {
+        return{color: '#800026'};
       }
-      else if (feature.geometry.coordinates[2] <= 50 && feature.geometry.coordinates[2] >= 40) {
-        return{color: "red"};
+      else if (feature.geometry.coordinates[2] > 50) {
+        return{color: '#BD0026'};
       }
-      else if (feature.geometry.coordinates[2] <= 39 && feature.geometry.coordinates[2] >= 30) {
-        return{color: "orange"};
+      else if (feature.geometry.coordinates[2] > 40) {
+        return{color: '#E31A1C'};
       }
-      else if (feature.geometry.coordinates[2] <= 29 && feature.geometry.coordinates[2] >= 20) {
-        return{color: "yellow"};
+      else if (feature.geometry.coordinates[2] > 30) {
+        return{color: '#FC4E2A'};
       }
-      else if (feature.geometry.coordinates[2] <= 19 && feature.geometry.coordinates[2] >= 10) {
-        return{color: "lightyellow"};
+      else if (feature.geometry.coordinates[2] > 20) {
+        return{color: '#FD8D3C'};
       }
-      else if (feature.geometry.coordinates[2] <= 9 && feature.geometry.coordinates[2] >= 0) {
-        return{color: "green"};
+      else if (feature.geometry.coordinates[2] > 10) {
+        return{color: '#FEB24C'};
       }
       else {
-        return{color: "lightgreen"};
+        return{color: '#90EE90'};
       }
     },
     
@@ -90,5 +90,36 @@ function createMap(geoJsonLayer) {
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
+
+  function getColor(d) {
+    return d > 100   ? '#800026' :
+           d > 50    ? '#BD0026' :
+           d > 40    ? '#E31A1C' :
+           d > 30    ? '#FC4E2A' :
+           d > 20    ? '#FD8D3C' :
+           d > 10    ? '#FEB24C' :
+                       '#90EE90';
+  }
+
+  var legend = L.control({ position: "bottomright" });
+  legend.onAdd = function () {
+
+    var div = L.DomUtil.create("div", "info legend");
+    var depths = [0, 10, 20, 30, 40, 50, 100];
+    //var labels = [];
+
+    var legendInfo = "<h4>Earthquake Depth</h4>";
+    div.innerHTML = legendInfo;
+    // loop through our depth intervals and generate a label with a colored square for each
+    for (var i = 0; i < depths.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(depths[i] + 1) + '"></i> ' +
+            depths[i] + (depths[i + 1] ? '&ndash;' + depths[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(myMap);
 
 }  
