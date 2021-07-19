@@ -11,18 +11,28 @@ function createFeatures(earthquakeData) {
 
   var geoJsonLayer = L.geoJson(earthquakeData, {
     
+    // Set the color based on depth of the earthquake.
     style: function(feature) {
-      if (feature.properties.mag >= 2) {
+      if (feature.geometry.coordinates[2] > 50) {
+        return{color: "purple"};
+      }
+      else if (feature.geometry.coordinates[2] <= 50 && feature.geometry.coordinates[2] >= 40) {
         return{color: "red"};
       }
-      else if (feature.properties.mag <= 2 && feature.properties.mag >= 1.5) {
+      else if (feature.geometry.coordinates[2] <= 39 && feature.geometry.coordinates[2] >= 30) {
         return{color: "orange"};
       }
-      else if (feature.properties.mag <= 1.5 && feature.properties.mag >= 1) {
+      else if (feature.geometry.coordinates[2] <= 29 && feature.geometry.coordinates[2] >= 20) {
         return{color: "yellow"};
       }
-      else {
+      else if (feature.geometry.coordinates[2] <= 19 && feature.geometry.coordinates[2] >= 10) {
+        return{color: "lightyellow"};
+      }
+      else if (feature.geometry.coordinates[2] <= 9 && feature.geometry.coordinates[2] >= 0) {
         return{color: "green"};
+      }
+      else {
+        return{color: "lightgreen"};
       }
     },
     
